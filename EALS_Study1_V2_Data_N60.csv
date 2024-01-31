@@ -1,0 +1,74 @@
+assessor_initials,participant_video_id,age_m,age_yr,gender_male1,ok_video_present,condition,present_side,puzzle_selection,puzzle_harder,redcap,video_on_server,assessor_video_on_server,exclude
+MM,EALS_study1_20220810_1,60,5,,0,ART ONLY,ART ONLY,ART ONLY,ART ONLY,1,1,1,1
+MM,EALS_study1_20220820_3,70,5,1,1,ART ONLY,ART ONLY,ART ONLY,ART ONLY,1,0,0,1
+MM,EALS_study1_20220821_4,58,4,0,0,ART ONLY,ART ONLY,ART ONLY,ART ONLY,1,1,1,1
+MM,EALS_study1_20220828_2,59,4,,1,ART ONLY,ART ONLY,ART ONLY,ART ONLY,0,1,1,1
+DG,EALS_study1_20221113_3,74,6,1,1,ART ONLY,ART ONLY,ART ONLY,ART ONLY,1,0,0,1
+DG,EALS_study1_20220811_2,53,4,,1,EXCLUDE,EXCLUDE,EXCLUDE,EXCLUDE,1,1,1,1
+DG,EALS_study1_20220817_3,49,4,,1,EXCLUDE,EXCLUDE,EXCLUDE,EXCLUDE,1,1,1,1
+DG,EALS_study1_20220817_4,50,4,,1,EXCLUDE,EXCLUDE,EXCLUDE,EXCLUDE,1,1,1,1
+MM,EALS_study1_20220821_5,65,5,1,0,EXCLUDE,EXCLUDE,EXCLUDE,EXCLUDE,1,1,1,1
+DG,EALS_study1_20220824_3,48,4,,1,EXCLUDE,EXCLUDE,EXCLUDE,EXCLUDE,1,1,1,1
+MM,EALS_study1_20220828_3,76,6,,1,EXCLUDE,EXCLUDE,EXCLUDE,EXCLUDE,1,1,1,1
+KC,EALS_study1_20221106_1,,,1,1,EXCLUDE,EXCLUDE,EXCLUDE,EXCLUDE,1,1,0,1
+DG,EALS_study1_20221113_2,74,6,1,1,EXCLUDE,EXCLUDE,EXCLUDE,EXCLUDE,1,0,1,1
+MM,EALS_study1_20220810_2,56,4,1,1,Unreliable,Hard left,Easy,0,1,1,1,
+MM,EALS_study1_20220810_3,72,6,1,1,Reliable,Hard left,Hard,1,1,1,1,
+DG,EALS_study1_20220810_4,76,6,1,1,Reliable,Hard right,Hard,1,1,1,1,
+DG,EALS_study1_20220810_5,62,5,0,1,Unreliable,Hard left,Easy,0,1,1,1,
+DG,EALS_study1_20220810_6,72,6,0,1,Unreliable,Hard right,Hard,1,1,1,1,
+DG,EALS_study1_20220810_7,66,5,1,1,Reliable,Hard right,Hard,1,1,1,1,
+DG,EALS_study1_20220811_1,57,4,0,1,Unreliable,Hard left,Easy,0,1,1,1,
+DG,EALS_study1_20220811_3,56,4,0,1,Unreliable,Hard right,Easy,0,1,1,1,
+DG,EALS_study1_20220811_4,72,6,0,0,Reliable,Hard left,Easy,0,1,1,1,
+DG,EALS_study1_20220812_1,56,4,0,1,Reliable,Hard right,Easy,0,1,1,1,
+MM,EALS_study1_20220812_10,50,4,1,1,Reliable,Hard right,Easy,0,1,0,1,
+DG,EALS_study1_20220812_2,65,5,1,1,Unreliable,Hard left,Easy,0,1,1,1,
+DG,EALS_study1_20220812_3,57,4,1,1,Unreliable,Hard right,Easy,0,1,1,1,
+DG,EALS_study1_20220812_4,67,5,1,1,Reliable,Hard left,Hard,1,1,1,1,
+DG,EALS_study1_20220812_5,60,5,1,1,Reliable,Hard right,Easy,0,1,1,1,
+DG,EALS_study1_20220812_6,63,5,0,1,Unreliable,Hard Left,Easy,0,1,1,1,
+MM,EALS_study1_20220812_7,67,5,0,1,Unreliable,Hard Left,Easy,0,1,1,1,
+MM,EALS_study1_20220812_8,66,5,0,0,Unreliable,Hard Left,Hard,1,1,1,1,
+MM,EALS_study1_20220812_9,67,5,1,1,Reliable,Hard Left,Hard,1,1,1,1,
+MM,EALS_study1_20220814_1,49,4,0,1,Unreliable,Hard Left,Easy,0,1,0,0,1
+MM,EALS_study1_20220814_2,64,5,0,1,Unreliable,Hard Right,Easy,0,1,0,1,
+MM,EALS_study1_20220814_3,76,6,0,0,Reliable,Hard Left,Hard,1,1,1,1,
+MM,EALS_study1_20220814_4,78,6,0,0,Reliable,Hard Right,Hard,1,1,1,1,
+MM,EALS_study1_20220814_5,73,6,1,1,Unreliable,Hard Left,Easy,0,1,1,1,
+MM,EALS_study1_20220814_6,49,4,1,1,Unreliable,Hard Right,Easy,0,1,1,1,
+MM,EALS_study1_20220814_7,74,6,0,1,Reliable,Hard Left,Hard,1,1,1,1,
+MM,EALS_study1_20220814_8,67,5,0,0,Reliable,Hard right,Hard,1,1,1,1,
+MM,EALS_study1_20220814_9,65,5,0,0,Reliable,Hard Left,Hard,1,1,1,1,
+DG,EALS_study1_20220817_1,59,4,1,1,Reliable,Hard Left,Easy,0,1,1,1,
+MM,EALS_study1_20220817_8,73,6,1,1,Unreliable,Hard Right,Hard,1,1,1,1,
+MM,EALS_study1_20220819_2,49,4,1,1,Reliable,Hard Right,Easy,0,1,1,1,
+DG,EALS_study1_20220819_3,74,6,0,1,Unreliable,Hard Right,Hard,1,1,1,1,
+MM,EALS_study1_20220820_2,82,6,0,1,Unreliable,Hard Left,Easy,0,1,1,1,
+MM,EALS_study1_20220820_4,78,6,0,0,Unreliable,Hard Left,Easy,0,1,1,1,
+MM,EALS_study1_20220821_1,61,5,0,1,Unreliable,Hard Left,Hard,1,1,1,1,
+MM,EALS_study1_20220821_2,55,4,1,1,Reliable,Hard Left,Easy,0,1,1,1,
+MM,EALS_study1_20220821_3,76,6,0,1,Reliable,Hard Right,Hard,1,1,1,1,
+MM,EALS_study1_20220821_6,51,4,1,1,Unreliable,Hard Left,Easy,0,1,1,1,
+DG,EALS_study1_20220824_1,58,4,0,1,Reliable,Hard Left,Easy,0,1,1,1,
+DG,EALS_study1_20220824_2,64,5,0,0,Reliable,Hard Right,Hard,1,1,1,1,
+DG,EALS_study1_20220824_4,65,5,0,0,Reliable,Hard Left,Easy,0,1,1,1,
+DG,EALS_study1_20220824_5,62,5,1,1,Reliable,Hard Right,Hard,1,1,1,1,
+DG,EALS_study1_20220826_1,52,4,0,1,Unreliable,Hard Left,Easy,0,1,1,1,
+DG,EALS_study1_20220826_2,48,4,0,0,Unreliable,Hard Right,Easy,0,1,1,1,
+DG,EALS_study1_20220826_3,70,5,0,0,Unreliable,Hard Left,Hard,1,1,1,1,
+DG,EALS_study1_20220826_4,71,5,1,1,Unreliable,Hard Left,Easy,0,1,1,1,
+DG,EALS_study1_20220826_5,66,5,1,1,Reliable,Hard Right,Hard,1,1,1,1,
+MM,EALS_study1_20220826_6,69,5,1,1,Reliable,Hard Left,Easy,0,1,1,1,
+MM,EALS_study1_20220826_7,65,5,0,1,Reliable,Hard Right,Hard,1,1,1,1,
+MM,EALS_study1_20220828_1,59,4,0,1,Unreliable,Hard Left,Hard,1,1,1,1,
+MM,EALS_study1_20220828_4,77,6,1,0,Reliable,Hard Left,Hard,1,1,1,1,
+DG,EALS_study1_20221007_1,48,4,1,0,Reliable,Hard Right,Hard,1,1,1,1,
+DG,EALS_study1_20221007_2,50,4,0,1,Reliable,Hard Right,Easy,0,1,1,1,
+DG,EALS_study1_20221014_2,62,5,0,0,Reliable,Hard Left,Hard,1,1,1,1,
+DG,EALS_study1_20221014_3,62,5,1,1,Unreliable,Hard Right,Easy,0,1,1,1,
+DG,EALS_study1_20221105_4,69,5,0,1,Reliable,Hard Left,Hard,1,1,1,1,
+KC,EALS_study1_20221210_1,76,6,1,0,Unreliable,Hard Right,Hard,1,1,1,1,
+KC,EALS_study1_20221210_3,73,6,1,1,Unreliable,Hard Right,Hard,1,1,1,1,
+ACN,EALS_study1_20230115_1,71,5,1,1,Unreliable,Hard Right,Hard,1,1,0,1,
+ACN,EALS_study1_20230115_2,63,5,1,0,Unreliable,Hard Right,Easy,0,1,1,1,
