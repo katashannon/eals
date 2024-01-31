@@ -20,6 +20,9 @@ library(boot)
 library(epitools)
 library(papaja)
 library(tinylabels)
+library(here)
+library(ggthemes)
+library(binom)
 ```
 
 
@@ -52,13 +55,13 @@ Finally, in post-hoc, non-preregistered analyses, we pool the datasets across V1
 We begin with the preregistered analyses for V1 (puzzles visible) N=60 
 
 ```{r}
-setwd('/Users/Kat/Library/Mobile Documents/com~apple~CloudDocs/EALS/Code/Personal repos/EALS Study 1/CogSci24')
-rm(list=ls())
+# setwd('/Users/Kat/Library/Mobile Documents/com~apple~CloudDocs/EALS/Code/Personal repos/EALS Study 1/CogSci24')
+# rm(list=ls())
 
 #### #### #### #
 ####  N = 60 Sequential Sampling Final Sample for V1
 #### #### #### #
-eals1_v1_n60_df <- read_csv('EALS_Study1_V1_Data_n60.csv')
+eals1_v1_n60_df <- read_csv(here('EALS_Study1_V1_Data_n60.csv'))
 
 # Remove rows with condition "EXCLUDE" and add a variable to distinguish data from experiment V1 and V1
 eals1_v1_n60_df <- eals1_v1_n60_df %>% 
@@ -614,3 +617,33 @@ round(confint(eals1_mod_pooled_n120_ageint),  digits = 2)
 
 
 Here, we find the interaction of age-by-condition is not a significant predictor of puzzle choice in the pooled data. Age and unreliable condition remain significant predictors.
+
+```{r}
+eals_pooled_age <- eals1_pooled_n120_df |>
+  mutate(age_m_binned = floor(age_m / 6) * 6) |>
+  group_by(age_m_binned, condition) |>
+  summarise(harder = sum(puzzle_harder), 
+            total = length(puzzle_harder), 
+            ci_lower = binom::binom.bayes(x = harder, n = total)$lower,
+            ci_upper = binom::binom.bayes(x= harder, n = total)$upper,
+            p = harder / total)
+            
+
+ggplot(eals_pooled_age, 
+       aes(x = age_m_binned, 
+           y = p,
+           col = condition)) + 
+  geom_linerange(aes(ymax = ci_upper, ymin = ci_lower), 
+                  position = position_dodge(width = .5)) + 
+  geom_point(aes(size = total), 
+             position = position_dodge(width = .5)) + 
+  geom_smooth(method = "glm",
+              method.args = list(family = "binomial"), se = FALSE) +
+  theme_minimal() +
+  xlab("Age (months)") + 
+  ylab("Chose harder puzzle") + 
+  coord_cartesian(ylim = c(0,1)) + 
+  ggthemes::scale_color_solarized() + 
+  theme(legend.position = "bottom")
+```
+
