@@ -1,0 +1,616 @@
+---
+title: 'EALS Study 1 Analysis: Puzzle Choice'
+author: "Kat Adams Shannon"
+date: "2023-30-24"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r echo=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, 
+                      message = FALSE, sanitize = TRUE)
+```
+
+
+```{r}
+library(tidyverse)
+library(BFpack)
+library(boot)
+library(epitools)
+library(papaja)
+library(tinylabels)
+```
+
+
+# Project Overview
+
+Study 1 of the EALS project is composed of two data collection efforts:
+
+* V1. Puzzles visible
+
+* V2. Puzzles obscured
+
+Preregistation available for V1: AsPredicted #89040 and V2: AsPredicted #103468
+
+# Analytic goals
+
+1. First we will run a logistic regression in the form of choice of puzzle harder ~ condition (reliable/unreliable help). 
+
+2. We will also generate Bayes factors for interpretation of the evidence of our hypothesis of a condition effect and for sequential sampling. 
+
+* The sampling stopping criteria is: We will test an initial sample of 10 children in each condition, and then evaluate the Bayes Factor on the hypothesis of a negative condition effect (unreliable experimenter -> lower choice of hard puzzle) after each day of testing. We will stop testing if either a BF > 10 in favor of the hypothesis of a negative condition effect, a BF > 3 against the hypothesis, or at an N=30/condition (N=60 total). Note, we report the final N = 60 here for the Cog Sci 24 paper analyses. 
+
+3. Next, we will run a followup regression including a main effect of age (in months, centered) and an interaction of age and condition.
+
+This analysis is repeated below first for V1 (puzzles visible) and then for V2 (puzzles obscured)
+
+Finally, in post-hoc, non-preregistered analyses, we pool the datasets across V1 and V2 to look at condition effects and age-by-condition interaction.
+
+## Experiment 1 (Puzzles Visible, N = 60)
+
+We begin with the preregistered analyses for V1 (puzzles visible) N=60 
+
+```{r}
+setwd('/Users/Kat/Library/Mobile Documents/com~apple~CloudDocs/EALS/Code/Personal repos/EALS Study 1/CogSci24')
+rm(list=ls())
+
+#### #### #### #
+####  N = 60 Sequential Sampling Final Sample for V1
+#### #### #### #
+eals1_v1_n60_df <- read_csv('EALS_Study1_V1_Data_n60.csv')
+
+# Remove rows with condition "EXCLUDE" and add a variable to distinguish data from experiment V1 and V1
+eals1_v1_n60_df <- eals1_v1_n60_df %>% 
+  filter(condition != "EXCLUDE") %>%
+  mutate(experiment = 1)
+```
+
+
+#### How many participants chose harder/larger-reward puzzle per condition in V1 (N=60)?
+
+```{r}
+#how many participants chose harder/larger-reward puzzle per condition?
+eals1_v1_n60_df %>% count(condition, puzzle_harder)
+
+#Format for APA
+#how many participants chose harder/larger-reward puzzle per condition?
+#eals1_v1_n60_df %>% 
+#  count(condition, puzzle_harder) %>% 
+#  label_variables(condition = "Condition", puzzle_harder = "Chose Harder", n = "N") %>%
+#  apa_table(caption = "Count harder/larger-reward puzzle choice by condition")
+```
+
+#### Mean of choice harder/larger-reward puzzle per condition in V1 (N=60)
+
+```{r}
+#Mean per condition 
+eals1_v1_n60_df %>% group_by(condition) %>% summarise(mean_harder = mean(puzzle_harder, na.rm = TRUE))
+
+#Format for APA
+#Mean of choice harder/larger-reward puzzle per condition 
+#eals1_v1_n60_df %>% 
+#  group_by(condition) %>% 
+#  summarise(mean_harder = mean(puzzle_harder, na.rm = TRUE)) %>% 
+#  label_variables(condition = "Condition", mean_harder = "Mean") %>%
+#  apa_table(caption = "Mean harder/larger-reward puzzle choice by condition")
+```
+
+#### Logistic regression in V1 (N=60)
+
+Here we are predicting harder/larger reward puzzle choice with reliable as reference group (so asking if there is a negative effect of unreliable on choice harder puzzle, as prereg) 
+
+```{r}
+#Logistic regression predicting harder/larger reward puzzle choice
+eals1_mod_v1_n60 <- glm(puzzle_harder ~ condition, family = "binomial", data = eals1_v1_n60_df)
+summary(eals1_mod_v1_n60)
+
+#In APA format
+#apa_eals1_mod_v1_n60 <- apa_print(eals1_mod_v1_n60)
+#apa_table(
+#  apa_eals1_mod_v1_n60$table, 
+#  caption = "Logistic regression predicting harder/larger-reward puzzle choice"
+#)
+round(coef(eals1_mod_v1_n60),  digits = 2)
+```
+
+Next, we will compute the odds ratio for effect of unreliable:
+
+```{r}
+round(exp(coef(eals1_mod_v1_n60)),  digits = 2)
+#compared to the reliable condition, those children in the unreliable condition have ~.32 times odds (harder to conceptualize because fraction)
+
+```
+In V1 (N=60), compared to the reliable condition, those children in the unreliable condition have ~.32 times odds (harder to conceptualize because fraction) of choosing the harder/larger-reward puzzle.
+
+We can also flip so unreliable is reference group, which makes the odds ratios easier to interpret (i.e., odds ratio will be >1 for effect of reliable on choice of puzzle harder).
+
+#### Logistic regression predicting harder/larger reward puzzle choice - flipped with unreliable as reference group - in V1 (N=60)
+```{r}
+#Logistic regression predicting harder/larger reward puzzle choice - flipped
+eals1_mod_v1_n60_flip <- glm(puzzle_harder ~ relevel(as.factor(condition), ref = "Unreliable"), family = "binomial", data = eals1_v1_n60_df)
+summary(eals1_mod_v1_n60_flip)
+
+
+#In APA format
+#apa_mod_n60 <- apa_print(mod_n60_flipped)
+#apa_table(
+#  apa_mod_n60$table, 
+#  caption = "Logistic regression predicting harder/larger-reward puzzle choice"
+#)
+round(coef(eals1_mod_v1_n60_flip),  digits = 2)
+```
+
+Next, we will compute the odds ratio for effect of reliable:
+
+```{r}
+round(exp(coef(eals1_mod_v1_n60_flip)),  digits = 2)
+#this shows us the reliable odds ratio, easier to flip so unreliable is reference so odds ratio will be >1 for effect of reliable
+```
+In V1 (N=60), compared to unreliable, those children in the reliable condition have 3.14 times higher odds of choosing harder/larger reward puzzle (same thing, so say it this way is easier to understand = ~1/.32)
+
+Since this is easier to interpret, we will report the flipped model odds ratio in the cog sci paper.
+
+#### 95% confidence intervals of flipped model in V1 (N=60)
+```{r}
+#95% confidence intervals
+round(exp(confint(eals1_mod_v1_n60_flip)),  digits = 2)
+#1/exp(confint(eals1_mod_v1_n60)) #just noting that this is the same as inverting the confidence intervals of the original model
+```
+
+Next, we will compute the Bayes factor on the original (non-flipped) logistic regression with reliable as the reference group, because this is our pre-registered approach.
+
+#### Computing Bayes factor on logistic regression in V1 (N=60)
+```{r}
+#Bayes Factor
+#see https://cran.r-project.org/web/packages/BFpack/vignettes/vignette_BFpack.html for example
+
+eals1_BF_mod_v1_n60 <- BF(eals1_mod_v1_n60, hypothesis = "condition < 0; condition = 0", complement = FALSE)
+summary(eals1_BF_mod_v1_n60)
+
+#Here is code below to give an example of inserting BF into text directly for future publication
+
+#In APA format
+#eals1_BF_matrix_v1_n60 <- eals1_BF_mod_v1_n60$BFmatrix_confirmatory
+#rownames(eals1_BF_matrix_v1_n60) <- c("H1", "H0") #need to update if have more than 2 hypotheses
+#colnames(eals1_BF_matrix_v1_n60) <- c("H1", "H0")
+
+#BF_h1_n60 <- eals1_BF_matrix_v1_n60[1,2] #need to update if have more than 2 hypotheses
+#BF_h2_n60 <- eals1_BF_matrix_v1_n60[2,1]
+
+#apa_table(eals1_BF_matrix_v1_n60, 
+#          caption = "Evidence Matrix (Bayes Factors)"
+#)
+
+#BF_hypoth <- eals1_BF_mod_v1_n60$hypotheses
+#names(BF_hypoth) <- c("H0","H1")
+
+#`r BF_hypoth` 
+
+#Hypothesis H0 is `r BF_hypoth[2]` and H1 is `r BF_hypoth[1]`.
+
+#The data are `r round(BF_h1_n60,2)` times more likely under the hypothesis of a negative effect of unreliable (H1) than an absence of an effect (H0) on choice of harder/larger-reward puzzle.
+
+```
+Note that in the BFpack model summary the null H = 0 is "H2" but for our convention we will call the null H0 instead of H2.
+
+Hypothesis H0 is the null of no condition difference and H1 is the alternative hypothesis of a negative effect of unreliable conditions.
+
+So, the data are 2.18 times more likely under the hypothesis of a negative effect of unreliable (H1) than an absence of an effect (H0) on choice of harder/larger-reward puzzle.
+
+#### Age distribution across conditions in V1 (N=60):
+
+```{r}
+#Age distribution and interaction
+
+#create centered age variable 
+eals1_v1_n60_df$age_m_cen = eals1_v1_n60_df$age_m #duplicate original so can still look at score without center
+eals1_v1_n60_df$age_m_cen = eals1_v1_n60_df$age_m - mean(eals1_v1_n60_df$age_m)
+
+#distribution of age 
+#vertical box plot by group
+boxplot(age_m ~ condition, data = eals1_v1_n60_df, col = "white")
+
+# Points
+stripchart(age_m ~ condition,
+           data = eals1_v1_n60_df,
+           method = "jitter",
+           pch = 19,
+           col = 2:4,
+           vertical = TRUE,
+           add = TRUE)
+```
+
+
+#### Is there a difference in age across conditions in V1 (N=60)?
+```{r}
+#is there a difference in age across conditions?
+t.test(age_m_cen ~ condition, data = eals1_v1_n60_df)
+```
+We find no significant difference in age between reliable and unreliable help conditions.
+
+#### Logistic regression with age-by-condition interaction + 95% confidence intervals in V1 (N=60)
+```{r}
+#logistic regression condition age and condition - interaction
+eals1_mod_v1_n60_ageint <- glm(puzzle_harder ~ condition + age_m_cen + condition*age_m_cen, family = "binomial", data = eals1_v1_n60_df)
+summary(eals1_mod_v1_n60_ageint)
+round(confint(eals1_mod_v1_n60_ageint),  digits = 2)
+```
+#### Computing Bayes factor on logistic regression with age-by-condition interaction in V1 (N=60)
+```{r}
+#Bayes Factor
+eals1_BF_mod_v1_n60_ageint <- BF(eals1_mod_v1_n60_ageint, hypothesis = "conditionUnreliable < 0; conditionUnreliable = 0", complement = FALSE)
+summary(eals1_BF_mod_v1_n60_ageint)
+#check specification of BF with interaction model
+```
+
+The BF for a negative effect of unreliable condition on choice of puzzle harder is 1.32 in the model with age-by-condition interaction included. Since the interaction wasn't significant, we chose to run the model for the main effects.
+
+#### Logistic regression with age and condition main effects + 95% confidence intervals in V1 (N=60)
+```{r}
+#logistic regression condition age and condition - main effects
+eals1_mod_v1_n60_agemain <- glm(puzzle_harder ~ condition + age_m_cen, family = "binomial", data = eals1_v1_n60_df)
+summary(eals1_mod_v1_n60_agemain)
+round(confint(eals1_mod_v1_n60_agemain),  digits = 2)
+```
+#### Computing Bayes factor on logistic regression with age and condition main effects in V1 (N=60)
+```{r}
+#Bayes Factor
+eals1_BF_mod_v1_n60_agemain <- BF(eals1_mod_v1_n60_agemain, hypothesis = "conditionUnreliable < 0; conditionUnreliable = 0", complement = FALSE)
+summary(eals1_BF_mod_v1_n60_agemain)
+```
+Both main effects of age and condition are significant with interaction removed...BF (H1 of a condition effect) = 2.37
+
+In sum, we do not find a significant interaction although the effect may be there and we are under-powered. We will return to this at the end of the markdown file by pooling across V1 and V2 to look at the age-by-condition interaction over a larger sample.
+
+
+
+
+
+
+
+## Experiment 2 (Puzzles Obscured, N = 60)
+
+Next, we run the preregistered analyses for V2 (puzzles obscured) N=60 
+
+```{r}
+
+#### #### #### #
+####  N = 60 Sequential Sampling Final Sample for V2
+#### #### #### #
+eals1_v2_n60_df <- read_csv('EALS_Study1_v2_Data_n60.csv')
+
+# Remove rows with condition "EXCLUDE" and "ART ONLY" -> ART ONLY is children who didn't start the study but did art in the room and were sometimes marked on the participants sheet (sometimes children who changed mind about participating, sometimes siblings, etc)
+#add a variable to distinguish data from experiment V1 and V2
+eals1_v2_n60_df <- eals1_v2_n60_df %>%
+  filter(condition != "EXCLUDE" & 
+           condition != "ART ONLY") %>% 
+            mutate(experiment = 2)
+
+#change character to numeric in V2
+eals1_v2_n60_df$puzzle_harder <- as.numeric(eals1_v2_n60_df$puzzle_harder)
+```
+
+
+#### How many participants chose harder/larger-reward puzzle per condition in V2 (N=60)?
+
+```{r}
+#how many participants chose harder/larger-reward puzzle per condition?
+eals1_v2_n60_df %>% count(condition, puzzle_harder)
+
+#Format for APA
+#how many participants chose harder/larger-reward puzzle per condition?
+#eals1_v2_n60_df %>% 
+#  count(condition, puzzle_harder) %>% 
+#  label_variables(condition = "Condition", puzzle_harder = "Chose Harder", n = "N") %>%
+#  apa_table(caption = "Count harder/larger-reward puzzle choice by condition")
+```
+
+#### Mean of choice harder/larger-reward puzzle per condition in V2 (N=60)
+
+```{r}
+#Mean per condition 
+eals1_v2_n60_df %>% group_by(condition) %>% summarise(mean_harder = mean(puzzle_harder, na.rm = TRUE))
+
+#Format for APA
+#Mean of choice harder/larger-reward puzzle per condition 
+#eals1_v2_n60_df %>% 
+#  group_by(condition) %>% 
+#  summarise(mean_harder = mean(puzzle_harder, na.rm = TRUE)) %>% 
+#  label_variables(condition = "Condition", mean_harder = "Mean") %>%
+#  apa_table(caption = "Mean harder/larger-reward puzzle choice by condition")
+```
+
+#### Logistic regression in V2 (N=60)
+
+Here we predicting harder/larger reward puzzle choice with reliable as reference group (so asking if there is a negative effect of unreliable on choice harder puzzle, as prereg)
+
+```{r}
+#Logistic regression predicting harder/larger reward puzzle choice
+eals1_mod_v2_n60 <- glm(puzzle_harder ~ condition, family = "binomial", data = eals1_v2_n60_df)
+summary(eals1_mod_v2_n60)
+
+#In APA format
+#apa_eals1_mod_v2_n60 <- apa_print(eals1_mod_v2_n60)
+#apa_table(
+#  apa_eals1_mod_v2_n60$table, 
+#  caption = "Logistic regression predicting harder/larger-reward puzzle choice"
+#)
+
+round(coef(eals1_mod_v2_n60),  digits = 2)
+#compared to the reliable condition, those children in the unreliable condition have ~.28 times odds (harder to conceptualize because fraction)
+
+```
+Next, we will compute the odds ratio for effect of unreliable:
+
+```{r}
+round(exp(coef(eals1_mod_v2_n60)),  digits = 2)
+#compared to the reliable condition, those children in the unreliable condition have ~.32 times odds (harder to conceptualize because fraction)
+
+```
+
+Compared to the reliable condition, those children in the unreliable condition have ~.29 times odds (harder to conceptualize because fraction) of choosing the harder/larger-reward puzzle. We will reanalyze with unreliable as the reference group so we get more interpretable odds ratio.
+
+#### Logistic regression predicting harder/larger reward puzzle choice - flipped with unreliable as reference group in V2 (N=60)
+```{r}
+#Logistic regression predicting harder/larger reward puzzle choice - flipped
+eals1_mod_v2_n60_flip <- glm(puzzle_harder ~ relevel(as.factor(condition), ref = "Unreliable"), family = "binomial", data = eals1_v2_n60_df)
+summary(eals1_mod_v2_n60_flip)
+
+
+#In APA format
+#apa_mod_n60 <- apa_print(mod_n60_flipped)
+#apa_table(
+#  apa_mod_n60$table, 
+#  caption = "Logistic regression predicting harder/larger-reward puzzle choice"
+#)
+
+round(exp(coef(eals1_mod_v2_n60_flip)),  digits = 2)
+#this shows us the reliable odds ratio, easier to flip so unreliable is reference so odds ratio will be >1 for effect of reliable
+```
+This shows us the reliable odds ratio:
+
+Compared to unreliable, those children in the reliable condition have 3.45 times higher odds of choosing harder/larger reward puzzle (same thing, so say it this way is easier to understand = ~1/.29)
+
+#### 95% confidence intervals of flipped model in V2 (N=60)
+```{r}
+#95% confidence intervals
+round(exp(confint(eals1_mod_v2_n60_flip)),  digits = 2)
+#1/exp(confint(eals1_mod_v2_n60)) #just noting that this is the same as inverting the confidence intervals of the original model
+```
+#### Computing Bayes factor for logistic regression in V2 (N=60)
+```{r}
+#Bayes Factor
+#see https://cran.r-project.org/web/packages/BFpack/vignettes/vignette_BFpack.html for example
+
+eals1_BF_mod_v2_n60 <- BF(eals1_mod_v2_n60, hypothesis = "condition < 0; condition = 0", complement = FALSE)
+summary(eals1_BF_mod_v2_n60)
+```
+
+The data are 3.5 times more likely under the hypothesis of a negative effect of unreliable (H1) than an absence of an effect (H0) on choice of harder/larger-reward puzzle.
+
+#### Let's look at the age distribution across conditions in V2 (N=60):
+```{r}
+#Age distribution and interaction
+
+#create centered age variable 
+eals1_v2_n60_df$age_m_cen = eals1_v2_n60_df$age_m #duplicate original so can still look at score without center
+eals1_v2_n60_df$age_m_cen = eals1_v2_n60_df$age_m - mean(eals1_v2_n60_df$age_m)
+
+#distribution of age 
+#vertical box plot by group
+boxplot(age_m ~ condition, data = eals1_v2_n60_df, col = "white")
+
+# Points
+stripchart(age_m ~ condition,
+           data = eals1_v2_n60_df,
+           method = "jitter",
+           pch = 19,
+           col = 2:4,
+           vertical = TRUE,
+           add = TRUE)
+```
+
+
+#### Is there a difference in age across conditions in V2 (N=60)?
+```{r}
+#is there a difference in age across conditions?
+t.test(age_m_cen ~ condition, data = eals1_v2_n60_df)
+```
+We find no difference between conditions in age for V2. Let's look at the age-by-condition interaction in this sample.
+
+#### Logistic regression condition age and condition - interaction + 95% confidence intervals - in V2 (N=60)
+```{r}
+#logistic regression condition age and condition - interaction
+eals1_mod_v2_n60_ageint <- glm(puzzle_harder ~ condition + age_m_cen + condition*age_m_cen, family = "binomial", data = eals1_v2_n60_df)
+summary(eals1_mod_v2_n60_ageint)
+round(confint(eals1_mod_v2_n60_ageint),  digits = 2)
+```
+#### Computing Bayes factor on logistic regression with age-by-condition interaction in V2 (N=60)
+```{r}
+#Bayes Factor
+eals1_BF_mod_v2_n60_ageint <- BF(eals1_mod_v2_n60_ageint, hypothesis = "conditionUnreliable < 0; conditionUnreliable = 0", complement = FALSE)
+summary(eals1_BF_mod_v2_n60_ageint)
+#check specification of BF with interaction model
+```
+
+Again, we find the interaction term is not significant. The BF for a negative effect of unreliable condition on choice of puzzle harder is 3.86 in the model with age-by-condition interaction included.  We'll look at the main effects of age and condition next.
+
+#### Logistic regression condition age and condition - main effects + 95% confidence intervals - in V2 (N=60)
+```{r}
+#logistic regression condition age and condition - main effects
+eals1_mod_v2_n60_agemain <- glm(puzzle_harder ~ condition + age_m_cen, family = "binomial", data = eals1_v2_n60_df)
+summary(eals1_mod_v2_n60_agemain)
+round(confint(eals1_mod_v2_n60_agemain),  digits = 2)
+```
+#### Computing Bayes factor on logistic regression with age and condition main effects in V2 (N=60)
+```{r}
+#Bayes Factor
+eals1_BF_mod_v2_n60_agemain <- BF(eals1_mod_v2_n60_agemain, hypothesis = "conditionUnreliable < 0; conditionUnreliable = 0", complement = FALSE)
+summary(eals1_BF_mod_v2_n60_agemain)
+```
+
+Both main effects of age and condition are significant with interaction removed...BF (H1 of a condition effect) = 4.35.
+
+
+In sum, we do not find a significant interaction although we find main effects of condition and age. We will look at the pooled results across V1 and V2 in case we're under-powered to find the age-by-condition interaction.
+
+
+
+
+
+
+
+
+
+
+
+## Pooled Results (Puzzles Visible + Obscured, N = 120)
+
+So, let's look at the pooled results across study 1 and 2
+```{r}
+
+#### #### #### #
+####  N = 120 Now create pooled dataset
+#### #### #### #
+
+# Identify common variables across V1 and V2 - they are the same already so do not need to combine on common names
+#common_vars <- Reduce(intersect, list(names(eals1_v2_n60_df), names(eals1_v1_n60_df)))
+
+# Subset the dataframes to keep only common variables
+#eals1_v1_n60_df_common <- eals1_v1_n60_df[, common_vars]
+#eals1_v2_n60_df_common <- eals1_v2_n60_df[, common_vars]
+
+# Concatenate the dataframes
+eals1_pooled_n120_df <- rbind(eals1_v1_n60_df, eals1_v2_n60_df)
+
+#view the concatenated dataframe
+#print(eals1_pooled_n120_df)
+
+#check for duplicates
+#duplicates <- eals1_pooled_n120_df[duplicated(eals1_pooled_n120_df$participant_video_id) | duplicated(eals1_pooled_n120_df$participant_video_id, fromLast = TRUE), ]
+
+#view the duplicates
+#print(duplicates)
+
+```
+
+#### How many participants chose harder/larger-reward puzzle per condition in pooled data (N=120)?
+```{r}
+#Count puzzle choice by condition pooled
+eals1_pooled_n120_df %>% group_by(condition, puzzle_harder) %>% summarise(count = n_distinct(participant_video_id))
+```
+
+
+#### Logistic regression with pooled data (N=60)
+
+Here we predicting harder/larger reward puzzle choice with reliable as reference group (so asking if there is a negative effect of unreliable on choice harder puzzle). We'll also add experiment V1/V2 as a fixed effect.
+
+```{r}
+#Logistic regression predicting harder/larger reward puzzle choice
+eals1_mod_pooled_n120 <- glm(puzzle_harder ~ condition + experiment, family = "binomial", data = eals1_pooled_n120_df)
+summary(eals1_mod_pooled_n120)
+
+#In APA format
+#apa_eals1_mod_pooled_n120 <- apa_print(eals1_mod_pooled_n120)
+#apa_table(
+#  apa_eals1_mod_pooled_n120$table, 
+#  caption = "Logistic regression predicting harder/larger-reward puzzle choice"
+#)
+
+round(coef(eals1_mod_pooled_n120),  digits = 2)
+#compared to the reliable condition, those children in the unreliable condition have ~.28 times odds (harder to conceptualize because fraction)
+
+```
+Next, we will compute the odds ratio for effect of unreliable:
+```{r}
+round(exp(coef(eals1_mod_pooled_n120)),  digits = 2)
+#compared to the reliable condition, those children in the unreliable condition have ~.32 times odds (harder to conceptualize because fraction)
+
+```
+
+Compared to the reliable condition, those children in the unreliable condition have ~.30 times odds (harder to conceptualize because fraction) of choosing the harder/larger-reward puzzle. We will reanalyze with unreliable as the reference group so we get more interpretable odds ratio. Those in experiment V2 have ~ .60 times odds of choosing harder/puzzle. Although experiment is not a significant predictor, note this direction makes sense if fewer participants choose the harder puzzle when it was obscured.
+
+#### Logistic regression predicting harder/larger reward puzzle choice - flipped with unreliable/experiment V2 as reference group in pooled (N=120)
+```{r}
+#Logistic regression predicting harder/larger reward puzzle choice - flipped
+eals1_mod_pooled_n120_flip <- glm(puzzle_harder ~ relevel(as.factor(condition), ref = "Unreliable") + relevel(as.factor(experiment), ref = "2"), family = "binomial", data = eals1_pooled_n120_df)
+summary(eals1_mod_pooled_n120_flip)
+
+
+#In APA format
+#apa_mod_n120 <- apa_print(mod_n120_flipped)
+#apa_table(
+#  apa_mod_n120$table, 
+#  caption = "Logistic regression predicting harder/larger-reward puzzle choice"
+#)
+
+round(exp(coef(eals1_mod_pooled_n120_flip)),  digits = 2)
+#this shows us the reliable odds ratio, easier to flip so unreliable is reference so odds ratio will be >1 for effect of reliable
+```
+This shows us the reliable odds ratio:
+
+Compared to unreliable, those children in the reliable condition have 3.30 times higher odds of choosing harder/larger reward puzzle (same thing, so say it this way is easier to understand = ~1/.30).
+
+#### 95% confidence intervals of flipped model in pooled (N=120)
+```{r}
+#95% confidence intervals
+round(exp(confint(eals1_mod_pooled_n120_flip)),  digits = 2)
+#1/exp(confint(eals1_mod_pooled_n120)) #just noting that this is the same as inverting the confidence intervals of the original model
+```
+#### Computing Bayes factor for logistic regression in pooled (N=120)
+```{r}
+#Bayes Factor
+#see https://cran.r-project.org/web/packages/BFpack/vignettes/vignette_BFpack.html for example
+
+eals1_BF_mod_pooled_n120 <- BF(eals1_mod_pooled_n120, hypothesis = "condition < 0; condition = 0", complement = FALSE)
+summary(eals1_BF_mod_pooled_n120)
+```
+
+As expected, we find a higher BF for our hypothesis (H1) of a negative effect of unreliable on choice of harder/larger-reward puzzle over the null hypothesis (H0) because we doubled our sample size. Here BF (H1) = 21.38.
+
+#### Now looking at age across the pooled data (N=120)
+
+```{r}
+#Looking at age
+#recompute age over pooled participants
+eals1_pooled_n120_df$age_m_cen = eals1_pooled_n120_df$age_m - mean(eals1_pooled_n120_df$age_m)
+```
+
+#### Age distribution across experiments v1 and v2 (N=120)
+
+```{r}
+# Vertical box plot by group
+boxplot(age_m ~ condition, data = eals1_pooled_n120_df, col = "white")
+
+# Points
+stripchart(age_m ~ condition,
+           data = eals1_pooled_n120_df,
+           method = "jitter",
+           pch = 19,
+           col = 2:4,
+           vertical = TRUE,
+           add = TRUE)
+```
+
+#### Is there a difference in age across conditions (N=120)?
+
+```{r}
+#is there a difference in age across conditions?
+t.test(age_m_cen ~ condition, data = eals1_pooled_n120_df) #no diff as expected
+```
+We find no difference in age by condition in the pooled dataset.
+
+Next, we ask if we find a significant interaction of age-by-condition on choice of harder puzzle in the pooled data:
+
+#### Logistic regression - interaction age by condition with experiment as fixed effect (N=120)
+
+```{r}
+#logistic regression - interaction
+eals1_mod_pooled_n120_ageint <- glm(puzzle_harder ~ condition + age_m_cen + experiment + condition*age_m_cen, family = "binomial", data = eals1_pooled_n120_df)
+summary(eals1_mod_pooled_n120_ageint)
+round(confint(eals1_mod_pooled_n120_ageint),  digits = 2)
+```
+
+
+Here, we find the interaction of age-by-condition is not a significant predictor of puzzle choice in the pooled data. Age and unreliable condition remain significant predictors.
