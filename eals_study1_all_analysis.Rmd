@@ -782,6 +782,7 @@ ci_df$ci_lower <- as.numeric(as.character(ci_df$ci_lower))
 ci_df$ci_upper <- as.numeric(as.character(ci_df$ci_upper))
 ```
 
+
 Create stacked bar graph experiment 2
 
 ```{r}
@@ -856,3 +857,31 @@ combined_plot
 ```
 
 
+# Mike's version of the plot
+
+Alternative ci computation
+
+```{r}
+# remotes::install_github("langcog/tidyboot")
+
+ci_df <- eals1_pooled_n120_df |>
+  group_by(condition, experiment) %>%
+  tidyboot::tidyboot_mean(column = puzzle_harder)
+```
+
+
+```{r}
+# Define a Solarized color palette for the bar chart with custom labels
+solarized_bar_colors <- c("#6c71c4", "#b58900") # Violet and Yellow colors
+ci_df$experiment_num <- paste("Experiment", as.character(ci_df$experiment))
+ggplot(ci_df, aes(x = condition, y = mean)) + 
+  geom_bar(stat = "identity", aes(fill = condition)) + 
+  geom_errorbar(aes(ymin = ci_lower, ymax = ci_upper), width = .24) + 
+  facet_wrap(~experiment_num) + 
+  xlab("Condition") + 
+  ylab("Proportion choosing harder puzzle") + 
+  ylim(0,1) + 
+  ggthemes::scale_fill_solarized(name = "") + 
+  theme_minimal() + 
+  theme(legend.position = "bottom")
+```
