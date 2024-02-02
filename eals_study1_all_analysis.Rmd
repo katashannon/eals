@@ -23,6 +23,7 @@ library(tinylabels)
 library(here)
 library(ggthemes)
 library(binom)
+library(patchwork)
 ```
 
 
@@ -629,7 +630,7 @@ eals_pooled_age <- eals1_pooled_n120_df |>
             p = harder / total)
             
 
-ggplot(eals_pooled_age, 
+pooled_age_graph <- ggplot(eals_pooled_age, 
        aes(x = age_m_binned, 
            y = p,
            col = condition)) + 
@@ -645,5 +646,187 @@ ggplot(eals_pooled_age,
   coord_cartesian(ylim = c(0,1)) + 
   ggthemes::scale_color_solarized() + 
   theme(legend.position = "bottom")
+
+pooled_age_graph
+
 ```
+
+Finally, we will visualize the proportion choice harder/easier puzzle in stacked bar chart for Experiment 1
+
+```{r}
+# Create 'puzzle_easier'  = 1 for those with 'puzzle_harder' = 0
+# Create puzzle_easier where puzzle_harder is 0
+eals1_v1_n60_df <- eals1_v1_n60_df %>%
+  mutate(puzzle_easier = ifelse(is.na(puzzle_harder) | puzzle_harder == 0, 1, 0))
+```
+
+Create bootstrapped confidence intervals for stacked bar graph experiment 1
+
+```{r}
+# Function to calculate the proportion of puzzle_easier = 1
+calculate_proportion <- function(data, indices) {
+  sample_data <- data[indices, ]
+  proportion <- mean(sample_data$puzzle_easier, na.rm = TRUE)
+  return(proportion)
+}
+
+# Bootstrap the proportions for each condition and calculate CIs
+bootstrap_proportions <- function(data, condition_value) {
+  condition_data <- filter(data, condition == condition_value)
+  results <- boot(condition_data, statistic = calculate_proportion, R = 10000)
+  ci <- boot.ci(results, type = "perc")$percent[4:5]
+  
+  # Ensure the returned object is a simple vector
+  return(c(mean = mean(condition_data$puzzle_easier, na.rm = TRUE), ci_lower = ci[1], ci_upper = ci[2]))
+}
+
+# Apply bootstrap_proportions function to each condition
+ci_list <- lapply(unique(eals1_v1_n60_df$condition), function(x) bootstrap_proportions(eals1_v1_n60_df, x))
+names(ci_list) <- unique(eals1_v1_n60_df$condition)
+
+# Convert list to dataframe
+ci_df <- bind_rows(ci_list, .id = "condition") %>% mutate(condition = factor(condition))
+ci_df$ci_lower <- as.numeric(as.character(ci_df$ci_lower))
+ci_df$ci_upper <- as.numeric(as.character(ci_df$ci_upper))
+```
+
+Create stacked bar graph experiment 1
+
+
+```{r}
+# Define a Solarized color palette for the bar chart
+solarized_bar_colors <- c("#6c71c4", "#b58900") # Adjust these colors as desired
+
+# Adjusted Visualization with ggplot2 including error bars for 95% CIs
+ggplot() +
+  # Bar plot for proportions
+  geom_bar(data = eals1_v1_n60_df, aes(x = condition, fill = factor(puzzle_easier)), position = "fill") +
+  # Error bars for confidence intervals
+  geom_errorbar(data = ci_df, aes(x = condition, ymin = ci_lower, ymax = ci_upper), width = 0.2) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(x = "Condition", y = "Proportion of Puzzle Choice") +
+  labs(subtitle = "Experiment 1") +
+  theme_minimal() +
+  theme(plot.subtitle = element_text(hjust = 0.5)) +
+  coord_cartesian(ylim = c(0, 1)) +
+  scale_fill_manual(values = solarized_bar_colors) + # Apply selected Solarized colors for bar fills
+  ggthemes::scale_color_solarized() + # Apply Solarized colors for lines
+  theme(legend.position = "bottom") 
+#  ggtitle("Experiment 1: Proportion of Puzzle Choices by Condition with 95% CI")
+
+```
+
+Now, we will visualize the proportion choice harder/easier puzzle in stacked bar chart for Experiment 2
+
+
+```{r}
+# Create 'puzzle_easier'  = 1 for those with 'puzzle_harder' = 0
+# Create puzzle_easier where puzzle_harder is 0
+eals1_v2_n60_df <- eals1_v2_n60_df %>%
+  mutate(puzzle_easier = ifelse(is.na(puzzle_harder) | puzzle_harder == 0, 1, 0))
+```
+
+Create bootstrapped confidence intervals for stacked bar graph experiment 2
+
+```{r}
+# Function to calculate the proportion of puzzle_easier = 1
+calculate_proportion <- function(data, indices) {
+  sample_data <- data[indices, ]
+  proportion <- mean(sample_data$puzzle_easier, na.rm = TRUE)
+  return(proportion)
+}
+
+# Bootstrap the proportions for each condition and calculate CIs
+bootstrap_proportions <- function(data, condition_value) {
+  condition_data <- filter(data, condition == condition_value)
+  results <- boot(condition_data, statistic = calculate_proportion, R = 10000)
+  ci <- boot.ci(results, type = "perc")$percent[4:5]
+  
+  # Ensure the returned object is a simple vector
+  return(c(mean = mean(condition_data$puzzle_easier, na.rm = TRUE), ci_lower = ci[1], ci_upper = ci[2]))
+}
+
+# Apply bootstrap_proportions function to each condition
+ci_list <- lapply(unique(eals1_v2_n60_df$condition), function(x) bootstrap_proportions(eals1_v2_n60_df, x))
+names(ci_list) <- unique(eals1_v2_n60_df$condition)
+
+# Convert list to dataframe
+ci_df <- bind_rows(ci_list, .id = "condition") %>% mutate(condition = factor(condition))
+ci_df$ci_lower <- as.numeric(as.character(ci_df$ci_lower))
+ci_df$ci_upper <- as.numeric(as.character(ci_df$ci_upper))
+```
+
+Create stacked bar graph experiment 2
+
+```{r}
+# Define a Solarized color palette for the bar chart
+solarized_bar_colors <- c("#6c71c4", "#b58900") # Adjust these colors as desired
+
+# Adjusted Visualization with ggplot2 including error bars for 95% CIs
+ggplot() +
+  # Bar plot for proportions
+  geom_bar(data = eals1_v2_n60_df, aes(x = condition, fill = factor(puzzle_easier)), position = "fill") +
+  # Error bars for confidence intervals
+  geom_errorbar(data = ci_df, aes(x = condition, ymin = ci_lower, ymax = ci_upper), width = 0.2) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(x = "Condition", y = "Proportion of Puzzle Choice") +
+  labs(subtitle = "Experiment 2") +
+  theme_minimal() +
+  theme(plot.subtitle = element_text(hjust = 0.5)) +
+  coord_cartesian(ylim = c(0, 1)) +
+  scale_fill_manual(values = solarized_bar_colors) + # Apply selected Solarized colors for bar fills
+  ggthemes::scale_color_solarized() + # Apply Solarized colors for lines
+  theme(legend.position = "bottom") 
+ # ggtitle("Experiment 2: Proportion of Puzzle Choices by Condition with 95% CI")
+
+```
+
+Option to combine into one figure with fixed label for harder/easier puzzles
+
+```{r}
+# Define a Solarized color palette for the bar chart with custom labels
+solarized_bar_colors <- c("#6c71c4", "#b58900") # Violet and Yellow colors
+
+# Visualization for Experiment 1
+barplot_exp1 <- ggplot() +
+  # Bar plot for proportions
+  geom_bar(data = eals1_v1_n60_df, aes(x = condition, fill = factor(puzzle_easier)), position = "fill") +
+  # Error bars for confidence intervals
+  geom_errorbar(data = ci_df, aes(x = condition, ymin = ci_lower, ymax = ci_upper), width = 0.2) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(x = "Condition", y = "Proportion of Puzzle Choice", subtitle = "Experiment 1", fill = "") +
+  theme_minimal() +
+  theme(plot.subtitle = element_text(hjust = 0.5)) +
+  coord_cartesian(ylim = c(0, 1)) +
+  scale_fill_manual(values = solarized_bar_colors, 
+                    labels = c("Harder puzzle", "Simpler puzzle")) +
+  theme(legend.position = "bottom")
+
+# Visualization for Experiment 2
+barplot_exp2 <- ggplot() +
+  # Bar plot for proportions
+  geom_bar(data = eals1_v2_n60_df, aes(x = condition, fill = factor(puzzle_easier)), position = "fill") +
+  # Error bars for confidence intervals
+  geom_errorbar(data = ci_df, aes(x = condition, ymin = ci_lower, ymax = ci_upper), width = 0.2) +
+  scale_y_continuous(labels = scales::percent_format()) +
+  labs(x = "Condition", y = "Proportion of Puzzle Choice", subtitle = "Experiment 2", fill = "") +
+  theme_minimal() +
+  theme(plot.subtitle = element_text(hjust = 0.5)) +
+  coord_cartesian(ylim = c(0, 1)) +
+  scale_fill_manual(values = solarized_bar_colors, 
+                    labels = c("Harder puzzle", "Simpler puzzle")) +
+  theme(legend.position = "bottom")
+
+# Combine the plots
+combined_plot <- barplot_exp1 + barplot_exp2 + 
+  plot_layout(nrow = 1, guides = 'collect') &
+  plot_annotation(title = "",
+                  theme = theme(plot.title = element_text(hjust = 0.5))) &
+  theme(legend.position = "bottom")
+
+# Print the combined plot
+combined_plot
+
+```
+
 
