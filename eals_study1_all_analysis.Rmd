@@ -617,8 +617,34 @@ round(confint(eals1_mod_pooled_n120_ageint),  digits = 2)
 ```
 
 
+#### Computing Bayes factor on logistic regression with age-by-condition interaction in pooled (N=120)
+```{r}
+#Bayes Factor
+eals1_BF_mod_pooled_n120_ageint <- BF(eals1_mod_pooled_n120_ageint, hypothesis = "conditionUnreliable < 0; conditionUnreliable = 0", complement = FALSE)
+summary(eals1_BF_mod_pooled_n120_ageint)
+#check specification of BF with interaction model
+```
+
 Here, we find the interaction of age-by-condition is not a significant predictor of puzzle choice in the pooled data. Age and unreliable condition remain significant predictors.
 
+
+#### Logistic regression - age and condition with experiment as main effect (N=120)
+```{r}
+#logistic regression - interaction
+eals1_mod_pooled_n120_agemain <- glm(puzzle_harder ~ condition + age_m_cen + experiment, family = "binomial", data = eals1_pooled_n120_df)
+summary(eals1_mod_pooled_n120_agemain)
+round(confint(eals1_mod_pooled_n120_agemain),  digits = 2)
+```
+#### Computing Bayes factor on logistic regression with age and condition with experiment as main effect (N=120)
+```{r}
+#Bayes Factor
+eals1_BF_mod_pooled_n120_agemain <- BF(eals1_mod_pooled_n120_ageint, hypothesis = "conditionUnreliable < 0; conditionUnreliable = 0", complement = FALSE)
+summary(eals1_BF_mod_pooled_n120_agemain)
+#check specification of BF with interaction model
+```
+
+
+Adding a visualization of proportion choice puzzle harder by age, grouped by condition. Dots are in 6 month bin, size reflects N per bin.
 ```{r}
 eals_pooled_age <- eals1_pooled_n120_df |>
   mutate(age_m_binned = floor(age_m / 6) * 6) |>
