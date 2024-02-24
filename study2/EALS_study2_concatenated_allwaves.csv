@@ -1,0 +1,124 @@
+participant_video_id,age_m,age_yr,gender_male1,ok_video_present,condition,bid_help_toy,first_bid_toy_s,datawave
+EALS_study2pilot_221112_2,62,5,Male,1,Reliable,1,12,spring 23 pilot
+EALS_study2pilot_230226_1,80,6,Female,1,Reliable,1,33,spring 23 pilot
+EALS_study2pilot_230305_2,72,5,Female,1,Unreliable,1,121,spring 23 pilot
+EALS_study2pilot_230305_3,62,5,Female,0,Unreliable,0,180,spring 23 pilot
+EALS_study2pilot_230305_4,56,4,Female,0,Reliable,1,32,spring 23 pilot
+EALS_study2pilot_230309_2,55,4,Female,0,Unreliable,0,180,spring 23 pilot
+EALS_study2pilot_230312_1,58,4,Female,1,Reliable,1,52,spring 23 pilot
+EALS_study2pilot_230312_2,65,5,Female,1,Unreliable,0,180,spring 23 pilot
+EALS_study2pilot_230319_1,65,5,Male,1,Unreliable,0,180,spring 23 pilot
+EALS_study2pilot_230319_3,72,6,Female,1,Reliable,1,32,spring 23 pilot
+EALS_study2pilot_230319_4,59,4,Female,1,Reliable,1,43,spring 23 pilot
+EALS_study2pilot_230328_1,63,5,Male,1,Reliable,1,41,spring 23 pilot
+EALS_study2pilot_230328_2,56,4,Male,1,Unreliable,0,180,spring 23 pilot
+EALS_study2pilot_230328_3,50,4,Female,1,Reliable,1,10,spring 23 pilot
+EALS_study2pilot_230328_4,50,4,Male,1,Unreliable,0,180,spring 23 pilot
+EALS_study2pilot_230329_1,58,4,Male,1,Reliable,1,42,spring 23 pilot
+EALS_study2pilot_230329_2,65,5,Female,1,Unreliable,1,25,spring 23 pilot
+EALS_study2pilot_230329_3,60,5,Female,1,Reliable,1,60,spring 23 pilot
+EALS_study2pilot_230330_1,60,4,Male,1,Unreliable,1,32,spring 23 pilot
+EALS_study2pilot_230330_2,62,5,Female,1,Unreliable,1,19,spring 23 pilot
+EALS_study2pilot_230330_3,59,4,Female,1,Reliable,1,17,spring 23 pilot
+EALS_study2pilot_230330_4,49,4,Female,1,Reliable,0,180,spring 23 pilot
+EALS_study2pilot_230331_1,54,4,Female,1,Unreliable,1,46,spring 23 pilot
+EALS_study2pilot_230331_2,56,4,Female,1,Reliable,1,2,spring 23 pilot
+EALS_study2pilot_230409_1,75,6,Male,1,Reliable,0,180,spring 23 pilot
+EALS_study2pilot_230409_3,64,5,Female,1,Unreliable,1,141,spring 23 pilot
+EALS_study2pilot_230409_4,68,5,Female,0,Unreliable,0,180,spring 23 pilot
+EALS_study2pilot_230416_1,73,6,Male,1,Reliable,1,59,spring 23 pilot
+EALS_study2pilot_230416_2,70,5,Male,1,Reliable,1,33,spring 23 pilot
+EALS_study2pilot_230416_3,70,5,Male,1,Reliable,1,135,spring 23 pilot
+EALS_study2pilot_230416_4,58,4,Female,1,Unreliable,1,78,spring 23 pilot
+EALS_study2pilot_230416_5,57,4,Female,0,Unreliable,0,180,spring 23 pilot
+EALS_study2pilot_230416_6,67,5,Male,1,Unreliable,1,58,spring 23 pilot
+EALS_study2pilot_230423_1,74,6,Female,1,Unreliable,0,180,spring 23 pilot
+EALS_study2pilot_230423_2,54,4,Female,1,Unreliable,1,36,spring 23 pilot
+EALS_study2_230528_1,81,6,Female,1,Unreliable,0,180,summer fall 23 data
+EALS_study2_230528_2,66,5,Female,0,Unreliable,1,18.412,summer fall 23 data
+EALS_study2_230528_3,55,4,Female,1,Reliable,1,27.241,summer fall 23 data
+EALS_study2_230528_4,58,4,Female,0,Reliable,1,10.266,summer fall 23 data
+EALS_study2_230528_5,74,6,Male,0,Reliable,1,5.559,summer fall 23 data
+EALS_study2_230604_2,64,5,Male,0,Unreliable,0,180,summer fall 23 data
+EALS_study2_230630_1,60,4,Female,0,Reliable,1,17.195,summer fall 23 data
+EALS_study2_230630_2,59,4,Male,0,Reliable,1,14.835,summer fall 23 data
+EALS_study2_230630_4,64,5,Female,0,Unreliable,1,41.493,summer fall 23 data
+EALS_study2_230630_5,59,4,Female,0,Unreliable,0,180,summer fall 23 data
+EALS_study2_230707_1,61,5,Female,0,Reliable,1,44.164,summer fall 23 data
+EALS_study2_230718_1,65,5,Female,1,Reliable,1,4.827,summer fall 23 data
+EALS_study2_230718_2,76,5,Female,1,Reliable,0,180,summer fall 23 data
+EALS_study2_230718_3,61,5,Male,1,Unreliable,1,35.214,summer fall 23 data
+EALS_study2_230719_1,83,6,Male,1,Unreliable,0,180,summer fall 23 data
+EALS_study2_230720_1,56,4,Female,1,Reliable,1,4.939,summer fall 23 data
+EALS_study2_230720_2,74,6,Female,1,Unreliable,0,180,summer fall 23 data
+EALS_study2_230721_2,80,6,Male,1,Unreliable,1,14.434,summer fall 23 data
+EALS_study2_230721_3,59,4,Male,0,Reliable,1,73.244,summer fall 23 data
+EALS_study2_230721_4,82,6,Male,1,Reliable,0,180,summer fall 23 data
+EALS_study2_230721_5,80,6,Female,0,Reliable,1,35.677,summer fall 23 data
+EALS_study2_230721_6,58,4,Male,0,Unreliable,1,18.635,summer fall 23 data
+EALS_study2_230721_7,70,5,Male,1,Reliable,0,180,summer fall 23 data
+EALS_study2_230726_1,81,6,Female,1,Unreliable,1,99.875,summer fall 23 data
+EALS_study2_230726_3,81,6,Female,1,Unreliable,0,180,summer fall 23 data
+EALS_study2_230726_4,55,4,Male,1,Unreliable,1,21.486,summer fall 23 data
+EALS_study2_230727_1,66,5,Female,0,Reliable,1,13.657,summer fall 23 data
+EALS_study2_230728_1,62,5,Female,1,Reliable,1,158.107,summer fall 23 data
+EALS_study2_230728_2,53,4,Female,0,Unreliable,1,5.811,summer fall 23 data
+EALS_study2_230728_3,71,5,Other,1,Unreliable,0,180,summer fall 23 data
+EALS_study2_230802_1,81,6,Female,1,Reliable,1,82.128,summer fall 23 data
+EALS_study2_230811_1,54,4,Female,1,Unreliable,1,41.771,summer fall 23 data
+EALS_study2_230811_2,72,6,Male,1,Reliable,1,64.325,summer fall 23 data
+EALS_study2_230811_3,80,6,Male,1,Reliable,0,180,summer fall 23 data
+EALS_study2_230811_4,51,4,Male,1,Unreliable,1,38,summer fall 23 data
+EALS_study2_230813_1,56,4,Male,1,Unreliable,1,34,summer fall 23 data
+EALS_study2_231110_1,77,6,Male,1,Reliable,1,27,summer fall 23 data
+EALS_study2_231110_2,56,4,Male,1,Unreliable,1,80,summer fall 23 data
+EALS_study2_231111_1,65,5,Female,1,Reliable,1,138,summer fall 23 data
+EALS_study2_231111_2,50,4,Male,1,Reliable,1,25,summer fall 23 data
+EALS_study2_231111_3,74,6,Female,1,Unreliable,1,33,summer fall 23 data
+EALS_study2_231111_4,73,6,Female,0,Unreliable,0,180,summer fall 23 data
+EALS_study2_231111_5,60,5,Male,0,Reliable,1,44,summer fall 23 data
+EALS_study2_231112_1,63,5,Male,0,Unreliable,1,21,summer fall 23 data
+EALS_study2_231112_2,77,6,Female,1,Reliable,1,16,summer fall 23 data
+EALS_study2_231117_1,53,4,Female,0,Reliable,1,100,summer fall 23 data
+EALS_study2_231117_2,59,4,Male,1,Unreliable,1,23,summer fall 23 data
+EALS_study2_231118_1,58,4,Male,1,Unreliable,0,180,summer fall 23 data
+EALS_study2_231130_1,75,6,Male,1,Reliable,1,61,summer fall 23 data
+EALS_study2_231201_1,55,4,Female,1,Unreliable,1,42,summer fall 23 data
+EALS_study2_231201_2,57,4,Male,1,Unreliable,1,80,summer fall 23 data
+EALS_study2_231202_1,51,4,Male,0,Reliable,1,24,summer fall 23 data
+EALS_study2_231202_2,73,6,Male,0,Reliable,1,5,summer fall 23 data
+EALS_study2_231202_3,48,4,Male,1,Unreliable,1,82,summer fall 23 data
+EALS_study2_231202_4,69,5,Female,1,Unreliable,1,7,summer fall 23 data
+EALS_study2_231202_5,50,4,Male,1,Reliable,1,50,summer fall 23 data
+EALS_study2_231203_2,79,6,Female,1,Unreliable,1,74,summer fall 23 data
+EALS_study2_231203_3,71,5,Male,1,Unreliable,1,22,summer fall 23 data
+EALS_study2_231208_1,58,4,Female,1,Reliable,1,16,summer fall 23 data
+EALS_study2_231208_2,50,4,Female,0,Reliable,0,180,summer fall 23 data
+EALS_study2_231209_1,62,5,Male,1,Unreliable,1,47,summer fall 23 data
+EALS_study2_231210_1,79,6,Male,1,Unreliable,0,180,summer fall 23 data
+EALS_study2_240113_2,76,6,Female,1,Unreliable,1,33,winter 24 pilot
+EALS_study2_240114_3,64,5,Male,1,Unreliable,1,34,winter 24 pilot
+EALS_study2_240120_1,55,4,Female,1,Unreliable,0,180,winter 24 pilot
+EALS_study2_240120_2,75,6,Male,1,Unreliable,0,180,winter 24 pilot
+EALS_study2_240120_3,50,4,Female,1,Unreliable,1,20,winter 24 pilot
+EALS_study2_240121_2,71,5,Male,1,Unreliable,1,57,winter 24 pilot
+EALS_study2_240127_1,54,4,Female,1,Unreliable,1,62,winter 24 pilot
+EALS_study2_240127_2,76,6,Female,1,Unreliable,1,46,winter 24 pilot
+EALS_study2_240127_3,70,5,Male,1,Unreliable,1,49,winter 24 pilot
+EALS_study2_240128_2,51,4,Male,1,Unreliable,1,4,winter 24 pilot
+EALS_study2_240128_3,56,4,Female,1,Unreliable,0,180,winter 24 pilot
+EALS_study2_240203_1,65,5,Female,1,Unreliable,1,17,winter 24 pilot
+EALS_study2_240203_2,57,4,Female,0,Unreliable,0,180,winter 24 pilot
+EALS_study2_240203_4,68,5,Female,1,Unreliable,1,38,winter 24 pilot
+EALS_study2_240203_5,74,6,Male,1,Unreliable,0,180,winter 24 pilot
+EALS_study2_240203_6,64,5,Male,1,Unreliable,1,28,winter 24 pilot
+EALS_study2_240204_1,71,5,Female,1,Unreliable,1,42,winter 24 pilot
+EALS_study2_240204_2,82,6,Male,1,Unreliable,1,62,winter 24 pilot
+EALS_study2_240204_3,60,5,Female,1,Unreliable,0,180,winter 24 pilot
+EALS_study2_240210_3,74,6,Female,1,Unreliable,1,59,winter 24 pilot
+EALS_study2_240210_4,65,5,Male,0,Unreliable,0,180,winter 24 pilot
+EALS_study2_240210_6,65,5,Female,1,Unreliable,1,102,winter 24 pilot
+EALS_study2_240210_7,50,4,Female,1,Unreliable,1,108,winter 24 pilot
+EALS_study2_240210_8,74,6,Male,1,Unreliable,1,137,winter 24 pilot
+EALS_study2_240211_1,73,6,Female,0,Unreliable,1,36,winter 24 pilot
+EALS_study2_240211_2,65,5,Male,1,Unreliable,1,15,winter 24 pilot

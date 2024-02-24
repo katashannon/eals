@@ -671,7 +671,14 @@ pooled_age_graph <- ggplot(eals_pooled_age,
   ylab("Choice of harder puzzle") + 
   coord_cartesian(ylim = c(0,1)) + 
   ggthemes::scale_color_solarized() + 
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        legend.title = element_text(size = 14), # Increase legend title font size
+        legend.text = element_text(size = 14), # Increase legend text font size
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14),
+        strip.text = element_text(size = 14),
+        axis.title.x = element_text(size = 14),
+        axis.title.y = element_text(size = 14))
 
 pooled_age_graph
 
@@ -705,5 +712,10 @@ ggplot(ci_df, aes(x = condition, y = mean)) +
   ylim(0,1) + 
   ggthemes::scale_fill_solarized(name = "") + 
   theme_minimal() + 
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        axis.text.x = element_text(size = 14),
+        axis.text.y = element_text(size = 14),
+        strip.text = element_text(size = 14),
+        axis.title.x = element_text(size = 14),
+        axis.title.y = element_text(size = 14))
 ```
