@@ -1,0 +1,97 @@
+---
+title: "EALS Study 2 analysis"
+author: "Mike Frank"
+date: "2024-02-26"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(here)
+library(lme4)
+```
+
+Read data. 
+
+```{r}
+d <- read_csv(here("study2","EALS_study2_concatenated_allwaves.csv"))
+```
+
+Descriptives.
+
+```{r}
+d |> 
+  group_by(datawave, condition) |>
+  summarise(mean_age = mean(age_m/12), 
+            prop_male = mean(gender_male1 == "Male"), 
+            n = n()) |>
+  knitr::kable(digits = 2)
+```
+# Plot condition effects
+
+Let's not do cool survival curves and just look at the simple first bid time.
+
+```{r}
+ggplot(d, aes(x = condition, y = first_bid_toy_s)) + 
+  geom_jitter(height = 0, width = .2) + 
+  stat_summary(fun.data = "mean_cl_boot", col = "red") + 
+  facet_wrap(~datawave) +
+  scale_y_log10() + 
+  ylab("First bid (s)")
+```
+
+
+```{r}
+ggplot(d, aes(x = condition, y = bid_help_toy)) + 
+  geom_jitter(height = .05, width = .2) + 
+  stat_summary(fun.data = "mean_cl_boot", col = "red") + 
+  facet_wrap(~datawave) +
+  ylab("Bids for help")
+```
+
+
+# Exploration
+
+Relations between exploration time and demographics. 
+
+```{r}
+ggplot(d, aes(x = age_m, y = first_bid_toy_s, col = datawave)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", aes(group = 1), col = "black", lty = 2) + 
+  geom_smooth(method = "lm", se = FALSE) + 
+  scale_y_log10() + 
+  ylab("First bid (s)")
+```
+
+Add gender. 
+
+```{r}
+ggplot(d, aes(x = age_m, y = first_bid_toy_s, col = gender_male1)) + 
+  geom_point() + 
+  geom_smooth(method = "lm", se = TRUE) + 
+  scale_y_log10() + 
+  ylab("First bid (s)")
+```
+
+# Models
+
+Trying some kitchen sink models to understand data. 
+
+```{r}
+summary(lm(log(first_bid_toy_s) ~ condition, 
+             data = d))
+```
+
+Add age. 
+
+```{r}
+summary(lm(log(first_bid_toy_s) ~ condition * age_m, 
+             data = d))
+```
+Try a mixed effects model. This model doesn't converge because not all waves have all conditions, but it does show some condition effect. 
+
+```{r}
+summary(lmer(log(first_bid_toy_s) ~ condition + (condition | datawave), 
+             data = d))
+```
+
