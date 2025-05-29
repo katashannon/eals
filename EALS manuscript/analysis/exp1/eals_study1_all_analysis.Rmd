@@ -454,7 +454,7 @@ round(exp(coef(eals1_mod_pooled_n120_flip)),  digits = 2)
 #this shows us the reliable odds ratio, easier to flip so unreliable is reference so odds ratio will be >1 for effect of reliable
 ```
 
-In the pooled data (N = 120, compared to unreliable, those children in the reliable condition have 3.30 times higher odds of choosing harder/larger reward puzzle (same thing, so say it this way is easier to understand = ~1/.30).
+In the pooled data (N = 120), compared to unreliable, those children in the reliable condition have 3.30 times higher odds of choosing harder/larger reward puzzle (same thing, so say it this way is easier to understand = ~1/.30).
 
 ## 95% Confidence Intervals (flipped model) in pooled (N = 120)
 
