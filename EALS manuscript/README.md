@@ -13,5 +13,8 @@ analysis/
 data/
 	- contains data for experiments 1A, 1B, 2A, 2B, and 3
 
+previous analyses/
+	- contains code and data from earlier iterations of this project, including the CogSci 2024 proceedings
+ 
 materials/
 	- in progress, intended for other EALS study materials
