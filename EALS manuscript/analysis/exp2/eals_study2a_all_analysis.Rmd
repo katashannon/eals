@@ -1,0 +1,276 @@
+---
+title: "EALS Study 2A Analysis: Learning Strategies, 4 Button Box"
+author: "Kat Adams Shannon"
+date: "2025-05-23"
+output:
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+---
+
+```{r setup, include=T}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, 
+                      message = FALSE, sanitize = TRUE)
+```
+
+
+```{r}
+# load in required packages
+
+#install.packages("devtools")
+#devtools::install_github("maxlinde/baymedr") #run again if need to reinstall baymedr - this didn't work recently, so had to manually download and install...
+# load in required packages
+library(tidyverse)
+library(survival)
+library(ggsurvfit)
+library(survminer)
+library(baymedr)
+library(kableExtra)
+library(zoo)
+library(patchwork)
+library(pwr)
+library(brms)
+library(bridgesampling)
+library(BFpack)
+library(boot)
+library(rstanarm)
+
+```
+
+
+# Project Overview
+
+Preregistration:
+- AsPredicted #133476 
+
+A note about data. These finalized data have been double-coded. Inter-rater reliability is reported and any large discrepancies were resolved in a third step by an expert coder blind to condition. More information about reliability and data cleaning is available on Github in the folder [XXXXXX fill in]
+
+# Analytic goals
+
+1. First we will run a cox regression/survival analysis testing the hypothesis of a negative effect of unreliable condition on children's help-seeking during the free play session (presence/absence of a bid for help , and time to first bid if present).
+
+2. We will also generate Bayes factors for interpretation of the evidence of our hypothesis of a condition effect and for sequential sampling. 
+
+> The sampling stopping criteria is: We will test an initial sample of 10 children in each condition, and then evaluate the Bayes Factor on the hypothesis of a negative condition effect (unreliable experimenter -> lower choice of hard puzzle) after each day of testing. We planned to stop testing if either a BF > 10 in favor of the hypothesis of a negative condition effect, a BF > 3 against the hypothesis, or at an N=30/condition (N=60 total). However, between two waves of data collection, we collected an additional 11 participants who were not included in the initial count. More details can be found in the manuscript, but note that our final N = 71.
+
+3. In a non-preregistered analysis, we will test the hypothesis of a positive effect of unreliable condition on total time exploring during the free play session.
+
+4. Finally, in a non-preregistered analysis, we will look at any significant condition effects by age and gender.
+
+# Experiment 2A
+
+## Load and Prepare Data
+
+```{r}
+# Read the merged data file into R
+eals2a_n71_df <- read.csv("EALS_Study2A_Data_N71.csv")
+
+# Read the merged data file into R
+eals2a_n71_df <- read.csv("/Users/Kat/Library/Mobile Documents/com~apple~CloudDocs/EALS/Code/EALS final repo/data/exp2/EALS_Study2A_Data_N71.csv")
+
+```
+
+
+```{r}
+# Set factor level order for consistency across models and plots - so, reliable is reference group
+eals2a_n71_df$condition <- factor(eals2a_n71_df$condition, levels = c("Reliable", "Unreliable"))
+```
+
+
+```{r}
+#also create custom colors for plots
+plot_colors <- c("Reliable" = "#268bd2", "Unreliable" = "#dc322f")
+```
+
+## Descriptives
+
+First, let's get some descriptive statistics about the sample, age, gender, etc.
+
+```{r}
+
+summary_demo <- eals2a_n71_df %>%
+  group_by(condition) %>%
+  summarise(
+    count = n(),
+    mean_age = mean(age_m, na.rm = TRUE),
+    age_range = paste0(min(age_m, na.rm = TRUE), "-", max(age_m, na.rm = TRUE)),
+    male_count = sum(gender_male1, na.rm = TRUE),
+    female_count = sum(1 - gender_male1, na.rm = TRUE)
+  )
+
+print(summary_demo)
+```
+
+## Help-seeking analysis
+
+Let's look at our help-seeking DV next. Note that we impute the maximum time of 180 seconds (i.e. across 3 min free play session) to account for missingness in the duration to first bid for help variable.
+
+```{r}
+# Impute missing help bids with 180s for survival analysis
+subset_eals2a_n71_df <- eals2a_n71_df %>%
+  mutate(first_help_bid.duration = ifelse(is.na(first_help_bid.duration), 180, first_help_bid.duration))
+
+```
+
+Let's also get help-seeking descriptives.
+
+```{r}
+
+# Compute descriptive statistics for first_help_bid.duration (only for participants who made a bid)
+summary_first_help <- eals2a_n71_df %>%
+  filter(first_help_bid.count == 1) %>%  # including only those who made a bid for help
+  group_by(condition) %>%
+  summarise(
+    mean_first_bid = mean(first_help_bid.duration, na.rm = TRUE), # in seconds from start of free play session
+    sd_first_bid = sd(first_help_bid.duration, na.rm = TRUE),
+    median_first_bid = median(first_help_bid.duration, na.rm = TRUE),
+    min_first_bid = min(first_help_bid.duration, na.rm = TRUE),
+    max_first_bid = max(first_help_bid.duration, na.rm = TRUE)
+  )
+
+# Compute total participants and percentage who made a bid for help
+summary_bid_count <- eals2a_n71_df %>%
+  group_by(condition) %>%
+  summarise(
+    total_N = n(),  
+    bid_N = sum(first_help_bid.count, na.rm = TRUE),  # count of participants who made a bid at all during free play session
+    percent_bid = (bid_N / total_N) * 100  # percentage who made a bid
+  )
+
+# Merge summaries
+summary_combined <- merge(summary_first_help, summary_bid_count, by = "condition")
+
+print(summary_combined)
+
+```
+
+Onto our pre-registered analysis comparing presence/absence of a bid for help and duration of first bid for help by condition.
+
+## Do children in the unreliable condition seek help less often and more slowly than their peers in the reliable condition (N = 71)?
+
+```{r}
+# prepare the survival analysis 
+Surv(subset_eals2a_n71_df$first_help_bid.duration, subset_eals2a_n71_df$first_help_bid.count) 
+```
+
+```{r}
+surv_model_eals2a_n71 <- survfit(Surv(first_help_bid.duration, first_help_bid.count) ~ condition, data = subset_eals2a_n71_df)
+
+summary(surv_model_eals2a_n71)
+```
+
+## Survival plot
+
+Now let's plot these Kaplan-Meier survival curves by condition:
+
+```{r}
+
+ggsurvplot(surv_model_eals2a_n71, conf.int = TRUE, pval = TRUE, risk.table = TRUE,
+           legend.labs = c("Reliable", "Unreliable"),
+           legend.title = "Condition",
+           palette = c("#268bd2", "#dc322f"),
+           title = "Kaplan-Meier Curve for Time to First Bid for Help",
+           xlab = "Time (s)",
+           risk.table.height = 0.3)
+```
+
+## Survival Cox Regression
+
+```{r}
+cox_model_eals2a_n71 <- coxph(Surv(first_help_bid.duration, first_help_bid.count) ~ condition, data = subset_eals2a_n71_df)
+summary(cox_model_eals2a_n71)
+```
+
+In sum, we find no significant difference by condition in help-seeking.
+
+## Bayes factor for survival analysis
+
+Finally, let's compute a Bayes factor for a Cox proportional hazards regression model (this baymedr package does it for one dichotomous independent variable, here: condition).
+
+```{r}
+cox_eals2a_n71_df <- subset_eals2a_n71_df %>%
+  select(first_help_bid.duration, first_help_bid.count, condition) %>%
+  mutate(condition = if_else(condition == "Unreliable", 1, 0))
+# note here: dummy coded Unreliable = 1 (test), Reliable = 0 (reference)
+
+coxph_mod <- coxph_bf(data = cox_eals2a_n71_df,
+         null_value = 0,
+         alternative = "one.sided",
+         direction = "low", # H1: Unreliable has lower hazard than Reliable
+         prior_mean = 0,
+         prior_sd = 1)
+
+coxph_mod
+```
+
+The Bayes factor for the preregistered hypothesis of a negative condition effect was \( \text{BF}_{10} = 0.79 \).
+
+## Exploration Analysis
+
+Next we will conduct non-preregistered analyses to look at exploration. 
+
+Do we see a condition difference in total time exploring during the 3 min free play session?
+
+Let's start with descriptive statistics for total time exploring (max 180 seconds possible).
+
+```{r}
+
+# check condition is a factor
+eals2a_n71_df$condition <- factor(eals2a_n71_df$condition, levels = c("Unreliable", "Reliable"))
+
+# descriptive statistics for toy_exploration.duration.sum by condition
+summary_toy_exploration <- eals2a_n71_df %>%
+  group_by(condition) %>%
+  summarise(
+    mean_toy_exploration = mean(toy_exploration.duration.sum, na.rm = TRUE),
+    sd_toy_exploration = sd(toy_exploration.duration.sum, na.rm = TRUE),
+    median_toy_exploration = median(toy_exploration.duration.sum, na.rm = TRUE),
+    min_toy_exploration = min(toy_exploration.duration.sum, na.rm = TRUE),
+    max_toy_exploration = max(toy_exploration.duration.sum, na.rm = TRUE),
+    count_toy_exploration = n() # number of participants per condition
+  )
+
+print(summary_toy_exploration)
+
+```
+
+## Boxplot total time exploring
+
+Let's next visualize total time spent exploring by condition for descriptive purposes.
+
+```{r}
+#boxplot with jitter 
+
+ggplot(eals2a_n71_df, aes(x = condition, y = toy_exploration.duration.sum, fill = condition)) +
+  geom_boxplot(alpha = 0.6, outlier.shape = NA, width = 0.5) +
+  geom_jitter(aes(color = condition), width = 0.2, size = 2, alpha = 0.7) +  # jitter points colored by condition
+  scale_fill_manual(values = plot_colors) +
+  scale_color_manual(values = plot_colors) +
+  scale_y_continuous(breaks = seq(0, 180, by = 30), limits = c(0, 181)) +  # note have 181 as max to include values at max time 180 seconds
+  theme_minimal() +
+  theme(legend.position = "none", axis.text.x = element_text(size = 14)) +  # remove legend & increase x-axis font size
+  labs(title = "Exploration Time by Condition",
+       x = "Condition",
+       y = "Total Time Exploring (s)")
+```
+
+## Wilcoxon rank-sum test total time exploring
+
+Next, let's test condition differences in total time exploring the 4-button box using a wilcoxon rank-sum test.
+
+```{r}
+# subset data by condition
+reliable_data <- eals2a_n71_df[eals2a_n71_df$condition == "Reliable", "toy_exploration.duration.sum"]
+unreliable_data <- eals2a_n71_df[eals2a_n71_df$condition == "Unreliable", "toy_exploration.duration.sum"]
+
+# wilcoxon rank-sum test 
+wilcox_test_eals2a_n71 <- wilcox.test(reliable_data, unreliable_data, exact = FALSE)
+
+print("Variable: toy_exploration.duration.sum")
+print(wilcox_test_eals2a_n71)
+```
+The results of the wilcoxon rank-sum test show NO significant difference by condition in total time exploring the 4-button novel toy, p = 0.12
+
+Note that we did not find any significant condition effects, so we do not report models with age and gender as covariates.
+
