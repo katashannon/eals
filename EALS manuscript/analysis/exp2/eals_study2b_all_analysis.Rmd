@@ -62,11 +62,11 @@ A note about data. These finalized data have been double-coded. Inter-rater reli
 ## Load and Prepare Data
 
 ```{r}
-# Read the merged data file into R
+# Read in data uploaded to github under folder "exp2"
 eals2b_n32_df <- read.csv("EALS_Study2B_Data_N32.csv")
 
 # Read the merged data file into R
-eals2b_n32_df <- read.csv("/Users/Kat/Library/Mobile Documents/com~apple~CloudDocs/EALS/Code/EALS final repo/data/exp2/EALS_Study2B_Data_N32.csv")
+#eals2b_n32_df <- read.csv("/Users/Kat/Library/Mobile Documents/com~apple~CloudDocs/EALS/Code/EALS final repo/data/exp2/EALS_Study2B_Data_N32.csv")
 
 
 ```
