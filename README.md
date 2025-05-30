@@ -1,20 +1,15 @@
 # Environmental Adaptation in Learning Strategies (EALS)
 
-Kat Adams Shannon, May 20, 2025
-katashannon@gmail.com
+This repository contains code and data for the manuscript "Young children strategically adapt to unreliable social partners."
 
 ## Overview
 
-This is the repository for the EALS manuscript
-
-analysis/ 
+`analysis/`
 	- contains rmarkdown files for experiments 1A, 1B, 2A, 2B, and 3
 
-data/
+`data/`
 	- contains data for experiments 1A, 1B, 2A, 2B, and 3
 
-previous analyses/
-	- contains code and data from earlier iterations of this project, including the CogSci 2024 proceedings
- 
-materials/
-	- in progress, intended for other EALS study materials
+## Contact
+
+For questions, please contact katashannon@gmail.com
