@@ -17,24 +17,28 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
 
 ```{r}
 # load in required packages
-
-#install.packages("devtools")
-#devtools::install_github("maxlinde/baymedr") #run again if need to reinstall baymedr - this didn't work recently, so had to manually download and install...
-# load in required packages
+library(here)
 library(tidyverse)
 library(survival)
 library(ggsurvfit)
 library(survminer)
 library(baymedr)
-library(kableExtra)
-library(zoo)
-library(patchwork)
-library(pwr)
-library(brms)
-library(bridgesampling)
 library(BFpack)
-library(boot)
-library(rstanarm)
+
+# library(tidyverse)
+# library(survival)
+# library(ggsurvfit)
+# library(survminer)
+# library(baymedr)
+# library(kableExtra)
+# library(zoo)
+# library(patchwork)
+# library(pwr)
+# library(brms)
+# library(bridgesampling)
+# library(BFpack)
+# library(boot)
+# library(rstanarm)
 library(robustbase)
 
 ```
@@ -69,7 +73,7 @@ A note about data. These finalized data have been double-coded. Inter-rater reli
 
 ```{r}
 # Read in data uploaded to github under folder "exp3"
-eals3_n92_df <- read.csv("EALS_Study3_Data_N92.csv")
+eals3_n92_df <- read_csv(here("data","exp3","EALS_Study3_Data_N92.csv"))
 
 # Read the merged data file into R
 #eals3_n92_df <- read.csv("/Users/Kat/Library/Mobile Documents/com~apple~CloudDocs/EALS/Code/EALS final repo/data/exp3/EALS_Study3_Data_N92.csv")
@@ -274,8 +278,8 @@ Next, let's test condition differences in total time exploring the 4-button box 
 
 ```{r}
 # subset data by condition
-reliable_data <- eals3_n92_df[eals3_n92_df$condition == "Reliable", "toy_exploration.nooverlap.duration.sum"]
-unreliable_data <- eals3_n92_df[eals3_n92_df$condition == "Unreliable", "toy_exploration.nooverlap.duration.sum"]
+reliable_data <- eals3_n92_df[eals3_n92_df$condition == "Reliable",]$"toy_exploration.nooverlap.duration.sum"
+unreliable_data <- eals3_n92_df[eals3_n92_df$condition == "Unreliable",]$ "toy_exploration.nooverlap.duration.sum"
 
 # wilcoxon rank-sum test 
 wilcox_test_eals3_n92 <- wilcox.test(reliable_data, unreliable_data, exact = FALSE)
