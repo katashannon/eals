@@ -21,20 +21,22 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
 #install.packages("devtools")
 #devtools::install_github("maxlinde/baymedr") #run again if need to reinstall baymedr - this didn't work recently, so had to manually download and install...
 # load in required packages
+library(here)
 library(tidyverse)
 library(survival)
 library(ggsurvfit)
 library(survminer)
+# remotes::install_github("maxlinde/baymedr")
 library(baymedr)
-library(kableExtra)
-library(zoo)
-library(patchwork)
-library(pwr)
-library(brms)
-library(bridgesampling)
+# library(kableExtra)
+# library(zoo)
+# library(patchwork)
+# library(pwr)
+# library(brms)
+# library(bridgesampling)
 library(BFpack)
-library(boot)
-library(rstanarm)
+# library(boot)
+# library(rstanarm)
 
 ```
 
@@ -64,7 +66,7 @@ A note about data. These finalized data have been double-coded. Inter-rater reli
 
 ```{r}
 # Read in data uploaded to github under folder "exp2"
-eals2a_n71_df <- read.csv("EALS_Study2A_Data_N71.csv")
+eals2a_n71_df <- read_csv(here("data","exp2","EALS_Study2A_Data_N71.csv"))
 
 
 # Read the merged data file into R

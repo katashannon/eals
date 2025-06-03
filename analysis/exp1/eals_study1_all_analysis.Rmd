@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE, warning = FALSE,
 
 ```{r}
 # load in required packages
+library(here)
 library(tidyverse)
 library(BFpack)
 library(boot)
@@ -56,13 +57,10 @@ Finally, in post-hoc, non-preregistered analyses, we pool the datasets across V1
 ## Load and Prepare Data
 
 ```{r}
-setwd('/Users/Kat/Library/Mobile Documents/com~apple~CloudDocs/EALS/Code/EALS final repo/data/exp1/')
-rm(list=ls())
-
 # Read in data uploaded to github under folder "exp1"
 
 #  N = 60 Sequential Sampling Final Sample for V1
-eals1_v1_n60_df <- read_csv('EALS_Study1_V1_Data_n60.csv')
+eals1_v1_n60_df <- read_csv(here("data","exp1","EALS_Study1_V1_Data_n60.csv"))
 
 ```
 
@@ -239,8 +237,7 @@ While the age-by-condition interaction term was not statistically significant, i
 ## Load and Prepare Data in V2
 
 ```{r}
-setwd('/Users/Kat/Library/Mobile Documents/com~apple~CloudDocs/EALS/Code/EALS final repo/data/exp1/')
-eals1_v2_n60_df <- read_csv('EALS_Study1_V2_Data_N60.csv')
+eals1_v2_n60_df <- read_csv(here("data","exp1","EALS_Study1_V2_Data_N60.csv"))
 
 ```
 
