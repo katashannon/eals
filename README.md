@@ -13,6 +13,14 @@ This repository contains code and data for the manuscript "Young children strate
 `previous/`
 	- contains code and data from earlier iterations of this project, including the CogSci 2024 proceedings
  
+## Dependencies
+
+This project depends on `baymedr`, which should be installed from github:
+
+```{r}
+remotes::install_github("maxlinde/baymedr")
+```
+
 ## Contact
 
 For questions, please contact katashannon@gmail.com
